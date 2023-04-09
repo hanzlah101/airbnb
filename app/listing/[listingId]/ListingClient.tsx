@@ -60,24 +60,25 @@ const ListingClient: FC<ListingClientProps> = ({
 
     setIsLoading(true);
 
-    axios
+       axios
       .post("/api/reservations", {
         totalPrice,
         startDate: dateRange.startDate,
         endDate: dateRange.endDate,
         listingId: listing?.id,
       })
-      .then(() => {
+      .then(async () => {
+        await router.push("/trips");
         toast.success("Reserved Successfully!");
         setDateRange(initialDateRange);
-        router.push("/trips");
+        setIsLoading(false);
         router.refresh();
       })
       .catch((err) => {
+        setIsLoading(false);
         console.log(err);
         toast.error("Something Went Wrong!");
-      })
-      .finally(() => setIsLoading(false));
+      });
   }, [totalPrice, dateRange, listing?.id, currentUser, loginModal, router]);
 
   useEffect(() => {
